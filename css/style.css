@@ -1,0 +1,121 @@
+@import url(https://fonts.googleapis.com/css?family=Josefin+Sans:400,700);
+html {
+    height: 100%;
+    background-color: #EEE;
+}
+
+body {
+    box-sizing: border-box;
+    min-height: 100%;
+    margin: 0 auto;
+    padding: 2em;
+    max-width: 800px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 1.2em;
+    background-color: white;
+    border: double 3px #DDD;
+    border-top: none;
+    border-bottom: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1em;
+}
+
+strong {
+    color: #434d57;
+}
+
+.fixed_headers {
+    width: 750px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_headers .cell {
+    min-width: 170px;
+    max-width: 170px;
+    word-break: break-word;
+}
+
+.fixed_headers .header .row {
+    display: block;
+    position: relative;
+}
+
+.fixed_headers .table-row {
+    display: block;
+    width: 100%;
+    height: 300px;
+    overflow: auto;
+}
+
+.table {
+    /*white-space: nowrap;*/
+}
+
+.header {
+    display: block;
+    font-weight: bold;
+    border-color: #5a6673;
+    color: white;
+    overflow-x: scroll;
+}
+
+.header .cell {
+    background-color: slategrey;
+    border-color: #5a6673;
+    color: white;
+}
+
+.row {
+    display: table-row;
+}
+
+.rowGroup {
+    display: table-row-group;
+}
+
+.cell {
+    display: table-cell;
+    padding: 0.8em 1.2em;
+    border: solid 1px #c1c5c8;
+    background: rgba(112, 128, 144, 0.2);
+    margin: -3px 0 0 -3px;
+}
+
+.table-row {
+    display: table-row-group;
+}
+
+.headerContent {
+    position: relative;
+    top: -2px;
+    margin-left: 7px;
+}
+
+.headerContent:after {
+    font-family: Arial;
+    content: '⃠';
+    transition: color ease .5s;
+}
+
+.headerContent:hover {
+    color: rgba(158, 21, 21, 0.94);
+}
+
+input {
+    width: 96%;
+    font-size: 15px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
