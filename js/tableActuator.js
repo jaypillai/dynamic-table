@@ -4,7 +4,8 @@ var TableActuator = (function() {
     function TableActuator(tableData) {
         this.data = tableData;
         this.container = document.getElementsByClassName('container')[0];
-        this.headers = []
+        this.headers = [];
+        this.sortMap = {};
         this.init();
     }
 
@@ -36,19 +37,20 @@ var TableActuator = (function() {
 
             var rowHeader = document.createElement("div");
             rowHeader.className = "row";
-
+            $this.headers = Object.keys($this.data[0]);
+            
             //dynamically create headers from the key names of an item in the data-set
-            for (var headers = 0; headers < Object.keys($this.data[0]).length; headers++) {
+            for (var header = 0; header < $this.headers.length; header++) {
                 var headerCell = document.createElement("div");
                 var buttonSpan = document.createElement("span");
                 var headerSpan = document.createElement("span");
                 headerCell.className = "cell";
                 buttonSpan.className = "headerContent";
-                var currentHeader = Object.keys($this.data[0])[headers];
+                var currentHeader = $this.headers[header];
 
                 //register events for column delete and sorting
                 $this.registerEvents(currentHeader, buttonSpan, headerSpan);
-                headerSpan.appendChild(document.createTextNode(Object.keys(data[0])[headers].toUpperCase()));
+                headerSpan.appendChild(document.createTextNode($this.headers[header].toUpperCase()));
                 headerCell.appendChild(headerSpan);
                 headerCell.appendChild(buttonSpan);
                 rowHeader.appendChild(headerCell);
@@ -116,9 +118,11 @@ var TableActuator = (function() {
         },
         sortColumn: function(column) {
             //sort the column ascending and descending
+            var $this = this;
             this.data.sort(function(a, b) {
-                return (a[column] > b[column]) ? 1 : ((b[column] > a[column]) ? -1 : 0);
+                return (a[column] > b[column]) ? 1 : ((b[column] > a[column]) ? -1 : 0) * ($this.sortMap[column] ? -1 : 1);
             });
+            $this.sortMap[column] = !$this.sortMap[column];
             //redraw the table with new data-set order
             this.createTable();
         },
