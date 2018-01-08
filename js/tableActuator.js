@@ -1,9 +1,11 @@
+var controller;
 var TableActuator = (function() {
-    "use strict";
+    'use strict';
 
-    function TableActuator(tableData) {
-        this.data = tableData;
-        this.container = document.getElementsByClassName('container')[0];
+    function TableActuator(tableData, container) {
+        this.data = localStorage.getItem('tableState') ?
+            JSON.parse(localStorage.getItem('tableState')) : tableData;
+        this.container = document.getElementsByClassName(container)[0];
         this.headers = [];
         this.sortMap = {};
         this.init();
@@ -11,41 +13,60 @@ var TableActuator = (function() {
 
     TableActuator.prototype = {
 
-      // prototype functions
+        // prototype functions
 
         //entry point of the app
         init: function() {
+            if(!localStorage.getItem('tableState')){
+                localStorage.setItem('masterState', JSON.stringify(this.data));
+            }
+            localStorage.setItem('tableState', JSON.stringify(this.data));
             this.clearContainer();
             this.createTable();
         },
         //clears the table container, by deleting all child elements within it
         clearContainer: function() {
             var $this = this;
-            while ($this.container.firstChild) {
-                $this.container.removeChild($this.container.firstChild);
-            }
+            this.container.innerHTML = '';
         },
-        //method to create header and table
+
+        /**
+         * @method createTable
+         * render the grid dynamically based on json data
+         */
         createTable: function() {
             var $this = this;
             this.clearContainer();
-            var table = document.createElement("div");
-            table.className = "table fixed_headers";
 
-            var tableHeader = document.createElement("div");
-            tableHeader.className = "header";
+            var innerContainer = document.createElement('div');
+            innerContainer.className = 'inner-container';
 
-            var rowHeader = document.createElement("div");
-            rowHeader.className = "row";
+            var tableHeaderContainer = document.createElement('div');
+            tableHeaderContainer.className = 'table-header';
+
+            var table = document.createElement('div');
+            table.className = 'table fixed_headers';
+
+            var tableHeader = document.createElement('div');
+            tableHeader.className = 'divTable';
+            tableHeader.id = 'headertable';
+
+            var headerBody = document.createElement('div');
+            headerBody.className = 'divTableBody';
+
+            var rowHeader = document.createElement('div');
+            rowHeader.className = 'divTableRow';
+
             $this.headers = Object.keys($this.data[0]);
-            
+
             //dynamically create headers from the key names of an item in the data-set
             for (var header = 0; header < $this.headers.length; header++) {
-                var headerCell = document.createElement("div");
-                var buttonSpan = document.createElement("span");
-                var headerSpan = document.createElement("span");
-                headerCell.className = "cell";
-                buttonSpan.className = "headerContent";
+                var currentIndex = header;
+                var headerCell = document.createElement('div');
+                var buttonSpan = document.createElement('span');
+                var headerSpan = document.createElement('span');
+                headerCell.className = 'divTableCell header-cell col' +  ++currentIndex;
+                buttonSpan.className = 'headerContent';
                 var currentHeader = $this.headers[header];
 
                 //register events for column delete and sorting
@@ -57,41 +78,65 @@ var TableActuator = (function() {
             }
 
             //append the header to the parent div
-            tableHeader.appendChild(rowHeader);
-            table.appendChild(tableHeader);
-            var tblBody = document.createElement("div");
-            tblBody.className = "table-row";
+            headerBody.appendChild(rowHeader);
+            tableHeader.appendChild(headerBody);
+            tableHeaderContainer.appendChild(tableHeader);
+            innerContainer.appendChild(tableHeaderContainer);
+
+
+            var tblBodyContainer = document.createElement('div');
+            tblBodyContainer.className = 'table-body';
+
+
+            var tblBody = document.createElement('div');
+            tblBody.className = 'divTable';
+            tblBody.id = 'bodytable';
 
             //creating table body contents
             for (var rows = 0; rows < $this.data.length; rows++) {
                 // creates a table row
-                var row = document.createElement("div");
-                row.className = "row";
-
+                var row = document.createElement('div');
+                row.className = 'divTableRow';
+                var tdIndex = 0
                 //iterate through data-set values and populate the text node
                 for (var key in $this.data[rows]) {
-                    var rowCell = document.createElement("div");
-                    rowCell.className = "cell";
+                    var rowCell = document.createElement('div');
+                    rowCell.className = 'divTableCell body-cell col' + ++tdIndex;
                     var newSpan = document.createElement('span');
-
+                    newSpan.className = key + '_' + rows
                     var rowText = document.createTextNode($this.data[rows][key]);
                     newSpan.appendChild(rowText);
                     newSpan.setAttribute('contenteditable', 'true');
-                    newSpan.onblur = (function() {
-                        return function() {
-                            $this.updateJSON();
-                        };
-                    })();
+                    newSpan.onblur = function(event) {
+                        $this.updateJSON(event);
+                    };
                     rowCell.appendChild(newSpan);
                     row.appendChild(rowCell);
                 }
                 // add the row to the end of the table body
                 tblBody.appendChild(row);
             }
-            table.appendChild(tblBody);
-            this.container.appendChild(table);
 
+            tblBodyContainer.appendChild(tblBody);
+            innerContainer.appendChild(tblBodyContainer)
+            this.container.appendChild(innerContainer);
+            this.adjustScrollOffset();
         },
+
+        /**
+         * @method adjustScrollOffset
+         * Register Scroll Event and adjust the offset
+         */
+        adjustScrollOffset: function(currentHeader, buttonSpan, headerSpan) {
+            $('.table-body').scroll(function (){
+                $('.table-header').offset({ left: -1 * $('.table-body').scrollLeft() + 178});
+            });
+        },
+
+        /**
+         * @method registerEvents
+         * register events for sorting and column delete
+         */
         registerEvents: function(currentHeader, buttonSpan, headerSpan) {
             var $this = this;
             //adding events in loops for the header, using closures here.
@@ -106,16 +151,29 @@ var TableActuator = (function() {
                 };
             })(currentHeader);
         },
+
+        /**
+         * @method removeColumnName
+         * method to remove column on click of icon
+         */
         removeColumnName: function(column) {
             //remove columns except for the last one
             if (Object.keys(this.data[0]).length > 1) {
                 this.data.forEach(function(val) {
                     delete val[column];
                 });
+
+                localStorage.setItem('tableState', JSON.stringify(this.data));
+
                 //redraw the table with new data-set after removing of column
                 this.createTable();
             }
         },
+
+        /**
+         * @method sortColumn
+         * method to sort column on click of column header
+         */
         sortColumn: function(column) {
             //sort the column ascending and descending
             var $this = this;
@@ -123,47 +181,78 @@ var TableActuator = (function() {
                 return (a[column] > b[column]) ? 1 : ((b[column] > a[column]) ? -1 : 0) * ($this.sortMap[column] ? -1 : 1);
             });
             $this.sortMap[column] = !$this.sortMap[column];
+
             //redraw the table with new data-set order
             this.createTable();
         },
-        updateJSON: function() {
-            //update the data-set values after inline editing
-            var $this = this;
-            $this.headers = [];
-            document.querySelectorAll(".header .cell").forEach(
-                function(val) {
-                    $this.headers.push(val.textContent);
-                });
-            //getting updated cell values and re-creating the data-set
-            var tableContent = document.querySelectorAll(".table-row .row");
-            $this.data = [];
-            for (var row = 0; row < tableContent.length; row++) {
-                var temp = {};
-                tableContent[row].querySelectorAll(".cell").forEach(function(cell, index) {
-                    temp[$this.headers[index]] = cell.textContent;
-                });
-                $this.data.push(temp);
+
+        /**
+         * @method updateJSON
+         * method to update json data on cell edit
+         */
+        updateJSON: function(event) {
+
+            var keyDetails = event.target.className.split('_');
+            this.data[keyDetails[1]][keyDetails[0]] = event.target.textContent;
+            localStorage.setItem('tableState', JSON.stringify(this.data));
+        },
+
+        /**
+         * @method exportCSV
+         *
+         */
+        exportCSV: function(){
+            var link;
+            if (this.data) {
+                link = document.createElement('a');
+                link.href = 'data:attachment/csv,' + encodeURIComponent(JSON.stringify(this.data));
+                link.target = '_blank';
+                link.download = 'Sales_Report.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
-            //redraw the table with inline edited data-set
-            $this.createTable();
-        }
+        },
+
+        /**
+         * @method resetToInitialState
+         *
+         */
+        resetToInitialState: function(){
+            this.data = JSON.parse(localStorage.getItem('masterState'));
+            this.createTable();
+        },
+
     }
 
     return TableActuator;
 })();
 
-
-
 document.onreadystatechange = function() {
-    if (this.readyState === "complete") {
-        var controller = new TableActuator(data);
+    if (this.readyState === 'complete') {
+        var isLoggedIn = localStorage.getItem('isLoggesIn');
+        if(isLoggedIn){
+            controller = new TableActuator(data, 'container');
+            setTableBody();
+            $(window).resize(setTableBody);
+        } else {
+            window.location = 'login.html';
+        }
     };
 }
 
+function setTableBody() {
+    $('.table-body').height($('.inner-container').height() - $('.table-header').height());
+}
+
 //standalone method for row searching the table
+// I understand this is a costly operation since we are
+// dealing directly with the DOM here, the ideal way would be
+// to filter the json based on search and then re-render the grid
+// Because of time limitation resorting to this approach
 function searchHandler(event) {
     var input = event.target;
-    var tableContent = document.querySelectorAll(".table-row .row");
+    var tableContent = document.querySelectorAll('.table-body .divTableRow');
     Array.prototype.forEach.call(tableContent, function(row) {
         if (input.value.length >= 2) {
             var wholeText = row.textContent.toLowerCase();
@@ -173,5 +262,12 @@ function searchHandler(event) {
             row.style.display = '';
         }
     });
+}
 
+function exportCSV() {
+    controller.exportCSV();
+}
+
+function resetTable() {
+    controller.resetToInitialState();
 }

@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Responsive Tables (Collapse)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <title>Responsive Tables (Collapse)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
 </head>
 
+
 <body>
-  <input type="text" id="myInput" onkeyup="searchHandler(event)" placeholder="Search">
-
-  <div class="container">
-  </div>
-
+    <h1>Welcome Admin</h1>
+    <p>The below table is a template to generate sales report. Clicking on header name sorts the column, Clicking on ⃠ icon next to the header name deletes the header. You can do inline editing of the table, at any state if you want to switch back to the initial state, please click on RESET TABLE Button. Once you have done editing the cells of the table click on export table to get the table data in JSON format.
+        The table also features a search bar to search across table.
+    </p>
+    <div class='control-center'>
+        <div class='btn export-button' onclick='exportCSV()'>Export to JSON </div>
+        <div class='btn export-button reset-button' onclick='resetTable()'>RESET TABLE </div>
+        <input type="text" id="myInput" class="search" onkeyup="searchHandler(event)" placeholder="Search">
+    </div>
+    <div class="content">
+        <div class="container">
+        </div>
+    </div>
 </body>
+
 <script src='js/data.js'></script>
 <script src='js/tableActuator.js'></script>
 </html>

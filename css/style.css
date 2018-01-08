@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Josefin+Sans:400,700);
+@import "https://fonts.googleapis.com/css?family=Montserrat:300, 400, 700";
+
 html {
     height: 100%;
     background-color: #EEE;
@@ -8,98 +9,119 @@ body {
     box-sizing: border-box;
     min-height: 100%;
     margin: 0 auto;
-    padding: 2em;
-    max-width: 800px;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 1.2em;
+    font-size: 1.1em;
     background-color: white;
     border: double 3px #DDD;
     border-top: none;
     border-bottom: none;
+    padding: 0 2em;
+    font-family: Montserrat, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #444;
+    background: #eee;
+}
+
+input.search {
+    font-size: 15px;
+    padding: 6px 12px 6px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    border-radius: 20px;
+    width: 18%;
+    margin-top: -4%;
+    float: right;
+}
+
+input:focus {
+    outline-width: 0;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    height: 100%;
+    width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
+    color: #2980b9;
+    line-height: 1.1;
+    margin: 1.5rem 0 1.5rem;
+    font-weight: bold;
 }
 
-h3 {
-    font-size: 1.2em;
+p {
+    margin: 1em 0;
+    margin-left: 10%;
+    text-align: justify;
+    text-justify: inter-word;
+    width: 80%;
 }
 
-h4 {
-    font-size: 1em;
+h1 {
+    font-size: 2.8em;
+    letter-spacing: -2px;
+    margin-left: 10%;
 }
 
-strong {
-    color: #434d57;
+.container{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 300px;
 }
 
-.fixed_headers {
-    width: 750px;
-    table-layout: fixed;
-    border-collapse: collapse;
+.inner-container{
+    height: 100%;
+    overflow: hidden;
 }
 
-.fixed_headers .cell {
-    min-width: 170px;
-    max-width: 170px;
-    word-break: break-word;
-}
-
-.fixed_headers .header .row {
-    display: block;
+.table-header{
     position: relative;
 }
 
-.fixed_headers .table-row {
-    display: block;
-    width: 100%;
-    height: 300px;
+.table-body{
     overflow: auto;
-}
-
-.table {
-    /*white-space: nowrap;*/
-}
-
-.header {
-    display: block;
-    font-weight: bold;
-    border-color: #5a6673;
-    color: white;
-    overflow-x: scroll;
-}
-
-.header .cell {
-    background-color: slategrey;
-    border-color: #5a6673;
-    color: white;
-}
-
-.row {
-    display: table-row;
-}
-
-.rowGroup {
-    display: table-row-group;
-}
-
-.cell {
-    display: table-cell;
-    padding: 0.8em 1.2em;
-    border: solid 1px #c1c5c8;
-    background: rgba(112, 128, 144, 0.2);
-    margin: -3px 0 0 -3px;
-}
-
-.table-row {
-    display: table-row-group;
 }
 
 .headerContent {
     position: relative;
     top: -2px;
     margin-left: 7px;
+}
+
+#headertable{
+    font-size: 14px;
+}
+
+.header-cell{
+    font-weight: bold;
+    color: #dd5;
+}
+
+.body-cell{
+    background: rgba(112, 128, 144, 0.2);
+    text-align: left;
+}
+
+.col1, .col3, .col4, .col5, .col6{
+    width:16%;
+    min-width: 120px;
+}
+
+.col2{
+    width:20%;
+    min-width: 300px;
+}
+
+.content{
+    position: relative;
+    left: 140px;
+    top: 20%;
 }
 
 .headerContent:after {
@@ -112,10 +134,117 @@ strong {
     color: rgba(158, 21, 21, 0.94);
 }
 
-input {
-    width: 96%;
-    font-size: 15px;
-    padding: 12px 20px 12px 40px;
-    border: 1px solid #ddd;
-    margin-bottom: 12px;
+.divTable{
+    display: table;
+    width: 100%;
+    background: #34495e;
+    color: #fff;
+    border-radius: 0.4em;
+    overflow: hidden;
+}
+
+.divTableRow {
+    display: table-row;
+    border-color: #46637f;
+}
+
+.divTableHeading {
+    background-color: #EEE;
+    display: table-header-group;
+}
+
+.divTableCell, .divTableHead {
+    border: 1px solid #999999;
+    display: table-cell;
+    padding: 3px 10px;
+    margin: 0.5em 1em;
+}
+
+.divTableHeading {
+    background-color: #EEE;
+    display: table-header-group;
+    font-weight: bold;
+}
+
+.divTableFoot {
+    background-color: #EEE;
+    display: table-footer-group;
+    font-weight: bold;
+}
+
+.divTableBody {
+    display: table-row-group;
+}
+
+.divTableCell:before {
+    color: #dd5;
+}
+
+.control-center{
+    width: 80%;
+    left: 9%;
+    position: relative;
+    top: 12%;
+}
+
+.divTableCell:before {
+    font-weight: bold;
+    width: 6.5em;
+}
+
+.divTable .divTableCell {
+    text-align: left;
+}
+
+.divTable .divTableCell:first-child {
+    padding-top: 0.5em;
+}
+
+.divTable .divTableCell:last-child {
+    padding-bottom: 0.5em;
+}
+
+.divTable {
+    min-width: 300px;
+}
+
+.divTable .divTableRow {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.btn {
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+.export-button{
+    float: left;
+    margin-top: -4%;
+}
+
+.reset-button{
+    margin-left: 18%;
 }
